@@ -1,0 +1,272 @@
+﻿@model CapaEntidad.Empleados
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+<link rel="stylesheet" href="~/Estilos_mis_vistas/EstiloEmpleadoVista/EmpleadoBusqueda.css" />
+
+@{
+    ViewBag.Title = "Hola a todos";
+}
+
+<br />
+<br />
+
+@if (ViewData["Resultados"] != null)
+{
+    <div class="panel panel-primary">
+        <div class="panel-heading"></div>
+        <div class="panel-body">
+            <center><img src="https://image.flaticon.com/icons/png/512/560/560164.png" height="50" width="50" /></center>
+            <center>
+                <h1 id="IdTxtGrande">
+                    <u><mark>@ViewBag.TituloResultado</mark></u>
+                </h1>
+            </center>
+            <br />
+            <br />
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td><font size="4"><strong><u><mark>Codigo</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Nombre</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Apellido</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Departamento</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Cargo</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Estatus</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Retrato</mark></u></strong></font></td>
+
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var empleado in ViewData["Resultados"] as List<CapaEntidad.Vistas.Detalle_Empleado>)
+            {
+                var colorfila = (empleado.estatus != "INACTIVO") ? "success" : "danger";
+
+                <tr class="@colorfila">
+                    <td><b>@empleado.codigo</b></td>
+                    <td><b>@empleado.nombre</b></td>
+                    <td><b>@empleado.apellido</b></td>
+                    <td><b>@empleado.departamento_n</b></td>
+                    <td><b>@empleado.cargo_n</b></td>
+                    <td><b>@empleado.estatus</b></td>
+                    <td><img src="@empleado.retrato" width="50" height="50" /> </td>
+
+                    <td>
+                        <button type="button" class="btn btn-warning" onclick="document.getElementById('txtNombreUpdate').value = '@empleado.nombre',
+                                  document.getElementById('txtApellidoUpdate').value = '@empleado.apellido', document.getElementById('txtTelefonoUpdate').value = '@empleado.telefono',
+                                  document.getElementById('dropDepartamentosUpdate').value = @empleado.departamento_id, document.getElementById('txtSalarioUpdate').value = '@empleado.salario',
+                                  document.getElementById('dropCargosUpdate').value = @empleado.cargo_id, document.getElementById('txtHiddenEstatus').value = '@empleado.estatus',
+                                  document.getElementById('clave_Actualizar').value = @empleado.id"
+                                data-toggle="modal" data-target="#ModalUpdate">
+                            EDITAR
+                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#DetalleBusqueda"
+                                onclick="document.getElementById('imgDetalle').src = '@empleado.retrato',
+                            document.getElementById('tltNombre').innerHTML = '@empleado.nombre ' + '@empleado.apellido',
+                            document.getElementById('tltContactoBus').innerHTML = '@empleado.telefono',
+                            document.getElementById('tltFechaIngrBus').innerHTML = '@empleado.fecha_ingreso.ToString("dd/MM/yyyy")',
+                            document.getElementById('tltSalarioBus').innerHTML= '@empleado.salario' + ' $'">
+                            DETALLES
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </button>
+
+
+                        <button type="button" class="btn btn-danger" data-toggle="modal" onclick="document.getElementById('eliminarEmp').value= @empleado.id"
+                                data-target="#ModalEliminar">
+                            ELIMINAR
+                        </button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-danger">
+        <strong>MALA SUERTE</strong> No se han encontrado coincidencias en su busqueda !
+    </div>
+}
+
+@Html.ActionLink("VOLVER", "EmpleadoProceso", "Empleado", null, new { @class = "btn btn-warning" })
+
+<!-- Button trigger modal -->
+<!-- Modal ACTUALIZAR -->
+<div class="modal fade" id="ModalUpdate" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="modal-header">
+                    <img src="https://image.flaticon.com/icons/svg/2808/2808392.svg" width="100" height="100" />
+                </div>
+                <div class="panel panel-warning">
+                    <div class="panel-heading">Edita tus empleados</div>
+                    <div class="panel-body">
+
+                        @using (Html.BeginForm("ActualizarEmpleado", "Empleado", FormMethod.Post))
+                        {
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Nombre actual")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-address-card" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.TextBoxFor(n => n.Nombre, null, new { @class = "form-control", placeholder = "NOMBRE", @id = "txtNombreUpdate" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Nombre, null, new { @class = "text-danger", @Id = "errorNombre" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Departamento actual")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-building" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.DropDownListFor(n => n.Departamento_Id, ViewData["DropDownListDepartamentosInsert"] as List<SelectListItem>, "DEPARTAMENTOS",
+                                       new { @class = "form-control", @Id = "dropDepartamentosUpdate" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Departamento_Id, null, new { @class = "text-danger", @Id = "errorDept" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Apellido actual")
+
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-address-card" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.TextBoxFor(n => n.Apellido, null, new { @class = "form-control", placeholder = "APELLIDO", @Id = "txtApellidoUpdate" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Apellido, null, new { @class = "text-danger", @Id = "errorApellido" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Cargo actual")
+
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-cog" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.DropDownListFor(n => n.Cargo_Id, ViewData["dropdownListCargos"] as List<SelectListItem>, "CARGOS", new { @class = "form-control", @Id = "dropCargosUpdate" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Cargo_Id, null, new { @class = "text-danger", @Id = "errorCargo" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Contacto actual")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-mobile" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.TextBoxFor(n => n.Telefono, null, new { @class = "form-control", autocomplete = "off", placeholder = "TELEFONO", @Id = "txtTelefonoUpdate" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Telefono, null, new { @class = "text-danger", @Id = "errorNumero" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Salario actual")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-percent" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.TextBoxFor(n => n.Salario, null, new { @class = "form-control", autocomplete = "off", placeholder = "SALARIO", @Id = "txtSalarioUpdate" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Salario, null, new { @class = "text-danger", @Id = "errorSalario" })
+                                </div>
+                            </div>
+
+                            @Html.HiddenFor(n => n.Id, new { @Id = "clave_Actualizar" });
+                            @Html.HiddenFor(n => n.Estatus, new { @Id = "txtHiddenEstatus", @Value= "activo" })
+                            @Html.HiddenFor(n=> n.Sexo, new {@Id= "", @Value= "same" })
+
+                            <button type="submit" class="btn btn-primary">ACTUALIZAR !</button>
+                        }
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="btnCancelarActualizado" type="button" class="btn btn-danger" data-dismiss="modal">Cancelar Actualizacion</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- Modal ELIMINAR -->
+<div class="modal fade" id="ModalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <div class="panel panel-warning">
+                <div class="panel-heading"><strong>¿Seguro que quiere eliminar este empleado?</strong></div>
+                <div class="panel-body">
+
+                    @using (Html.BeginForm("EliminarEmpleado", "Empleado", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(n => n.Id, new { @id = "eliminarEmp" });
+                        <button type="submit" class="btn btn-danger">ELIMINAR</button>
+                    }
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- Modal DETALLES -->
+<div class="modal fade" id="DetalleBusqueda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><center><h4 id="tltNombre"></h4></center></div>
+                <div class="panel-body">
+                    <div class="modal-header">
+                        <div align="center">
+                            <img src="nothing" id="imgDetalle"
+                                 width="90" height="90" align="middle" />  <br /> <br />
+                            <h4><strong>Numero Telefonico</strong></h4>
+                            <h5 id="tltContactoBus"></h5>
+                            <h4><strong>Fecha ingreso</strong></h4>
+                            <h5 id="tltFechaIngrBus"></h5>
+                            <h4><strong>Sueldo neto</strong></h4>
+                            <h5 id="tltSalarioBus"></h5>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn1" type="button" class="btn btn-danger" data-dismiss="modal">CERRAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

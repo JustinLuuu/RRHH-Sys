@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "ResultadoBusquedaDpt";
+}
+
+<br />
+<br />
+
+@if (ViewData["Resultados"] != null)
+{
+    <div class="panel panel-primary">
+        <div class="panel-heading"></div>
+        <div class="panel-body">
+            <center><img src="https://image.flaticon.com/icons/png/512/1324/1324887.png" height="80" width="80" /></center>
+            <center>
+                <h1 id="IdTxtGrande">
+                    <u><mark>Departamento @ViewBag.NombreDpt</mark></u>
+                </h1>
+            </center>
+            <br />
+            <br />
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td><font size="4"><strong><u><mark>Codigo</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Nombre</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Apellido</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Departamento</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Cargo</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Estatus</mark></u></strong></font></td>
+                <td><font size="4"><strong><u><mark>Retrato</mark></u></strong></font></td>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var empleado in ViewData["Resultados"] as List<CapaEntidad.Vistas.Detalle_Empleado>)
+            {
+                var colorfila = (empleado.estatus != "INACTIVO") ? "success" : "danger";
+
+                <tr class="@colorfila">
+                    <td><b>@empleado.codigo</b></td>
+                    <td><b>@empleado.nombre</b></td>
+                    <td><b>@empleado.apellido</b></td>
+                    <td><b>@empleado.departamento_n</b></td>
+                    <td><b>@empleado.cargo_n</b></td>
+                    <td><b>@empleado.estatus</b></td>
+                    <td><img src="@empleado.retrato" width="50" height="50" /> </td>
+
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#DetalleEmpleadosDpt"
+                                onclick="document.getElementById('imgDetalle').src = '@empleado.retrato',
+                            document.getElementById('tltNombre').innerHTML = '@empleado.nombre ' + '@empleado.apellido',
+                            document.getElementById('tltContactoBus').innerHTML = '@empleado.telefono',
+                            document.getElementById('tltFechaIngrBus').innerHTML = '@empleado.fecha_ingreso.ToString("dd/MM/yyyy")',
+                            document.getElementById('tltSalarioBus').innerHTML= '@empleado.salario' + ' $'">
+                            DETALLES
+                            <i class="fa fa-address-card" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-danger">
+        <strong>MALA SUERTE</strong> No se han encontrado coincidencias en su busqueda !
+    </div>
+}
+
+@Html.ActionLink("VOLVER", "DepartamentoProceso", "Departamento", null, new { @class = "btn btn-warning" })
+
+
+<!-- Modal -->
+<!-- Modal DETALLES -->
+<div class="modal fade" id="DetalleEmpleadosDpt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><center><h4 id="tltNombre"></h4></center></div>
+                <div class="panel-body">
+                    <div class="modal-header">
+                        <div align="center">
+                            <img src="nothing" id="imgDetalle"
+                                 width="90" height="90" align="middle" />  <br /> <br />
+                            <h4><strong>Numero Telefonico</strong></h4>
+                            <h5 id="tltContactoBus"></h5>
+                            <h4><strong>Fecha ingreso</strong></h4>
+                            <h5 id="tltFechaIngrBus"></h5>
+                            <h4><strong>Sueldo neto</strong></h4>
+                            <h5 id="tltSalarioBus"></h5>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn1" type="button" class="btn btn-danger" data-dismiss="modal">CERRAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\bin\Debug\CapaEntidad.dll.config
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\bin\Debug\CapaEntidad.dll
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\bin\Debug\CapaEntidad.pdb
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\bin\Debug\EntityFramework.dll
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\bin\Debug\EntityFramework.xml
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\obj\Debug\CapaEntidad.csproj.CoreCompileInputs.cache
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\obj\Debug\CapaEntidad.csproj.CopyComplete
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\obj\Debug\CapaEntidad.dll
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\obj\Debug\CapaEntidad.pdb
+C:\Users\justi\OneDrive\Escritorio\Recursos Humanos\CapaEntidad\obj\Debug\CapaEntidad.csprojAssemblyReference.cache
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\CapaEntidad.dll.config
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\CapaEntidad.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\CapaEntidad.pdb
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\EntityFramework.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\EntityFramework.xml
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\obj\Debug\CapaEntidad.csproj.CoreCompileInputs.cache
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\obj\Debug\CapaEntidad.csproj.CopyComplete
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\obj\Debug\CapaEntidad.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\obj\Debug\CapaEntidad.pdb
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.Helpers.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.Mvc.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.Razor.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.WebPages.Deployment.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.WebPages.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.WebPages.Razor.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.Helpers.xml
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.Mvc.xml
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.Razor.xml
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.WebPages.xml
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.WebPages.Deployment.xml
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\System.Web.WebPages.Razor.xml
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\es\System.Web.Helpers.resources.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\es\System.Web.Mvc.resources.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\es\System.Web.Razor.resources.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\es\System.Web.WebPages.resources.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\es\System.Web.WebPages.Deployment.resources.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\bin\Debug\es\System.Web.WebPages.Razor.resources.dll
+C:\Users\justi\source\repos\Web Applications\Recursos Humanos\CapaEntidad\obj\Debug\CapaEntidad.csproj.AssemblyReference.cache

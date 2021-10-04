@@ -1,0 +1,20 @@
+﻿#panelSalida {
+    background-image: none;
+    background: #ea3f3f;
+    color: white;
+    border: solid;
+}
+
+#panelActivos {
+    background-image: none;
+    background: #00ff90;
+    color: white;
+    border: solid;
+}
+
+#panelFormInactivar {
+    background-image: none;
+    background: #ea3f3f;
+    color: white;
+    border: solid;
+}

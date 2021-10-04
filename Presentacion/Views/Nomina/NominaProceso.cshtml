@@ -1,0 +1,76 @@
+﻿@model CapaEntidad.Nominas
+
+<!--#region retrieve -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+<link rel="stylesheet" href="~/Estilos_mis_vistas/EstiloCargoVista/StrongStyle.css" />
+<link rel="stylesheet" href="~/Estilos_mis_vistas/EstiloEmpleadoVista/EmpleadoProceso.css" />
+<!--#endregion -->
+<!--#region Notificacion -->
+@if (TempData["CalculoExito"] != null)
+{
+    if ((bool)TempData["CalculoExito"] == true)
+    {
+        <script>
+            swal("Nomina calculada con exito !", "Afortunadamente", "success");
+        </script>
+    }
+    else
+    {
+        <script>
+            swal("Calculos Finalizados Con Exito", "Afortunadamente", "success");
+        </script>
+    }
+}
+<!--#endregion -->
+
+
+@{
+    ViewBag.Title = "Nomina";
+    string tituloPanel = (Model != null) ? "NOMINA CALCULADA" : "Aun no hay nominas calculadas";
+}
+
+
+<br />
+<br />
+<br />
+<br />
+
+<center><img src="https://image.flaticon.com/icons/png/512/1332/1332014.png" width="90" height="90" /></center>
+<br />
+
+@using (Html.BeginForm("NominaProceso", "Nomina", FormMethod.Post, new { ex = true }))
+{
+    <button type="submit" class="btn btn-success">
+        NUEVA NOMINA
+        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+    </button>
+}
+<br />
+<div class="panel panel-primary">
+    <div class="panel-heading" id="panelNomina"><center>@tituloPanel</center></div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>    
+                    <td><font size="4"><strong><u><mark>Id Nomina</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Fecha Expedida</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Total por empleados</mark></u></strong></font></td>
+                    <td>
+                    </td>
+                </tr>
+            </thead>
+            @if (Model != null)
+            {
+                <tbody>
+                    <tr>
+                        <td><b>@Model.Id</b></td>
+                        <td><b>@Model.Fecha.Value.ToString("dd/MM/yyyy")</b></td>
+                        <td><b>@Model.Monto_Total</b></td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+
+    </div>
+</div>

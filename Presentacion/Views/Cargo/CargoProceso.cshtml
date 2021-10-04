@@ -1,0 +1,264 @@
+﻿@model CapaEntidad.Cargos
+
+@{
+    ViewBag.Title = "CargoProceso";
+}
+
+
+<!--#region retrieve -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="~/JScript_mis_vistas/Cargos/DesaparecerErroresCr.js"></script>
+<script src="~/JScript_mis_vistas/Cargos/DesaparecerErroresUpd.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+<link rel="stylesheet" href="~/Estilos_mis_vistas/EstiloCargoVista/StrongStyle.css" />
+<link rel="stylesheet" href="~/Estilos_mis_vistas/EstiloEmpleadoVista/EmpleadoProceso.css" />
+<!--#endregion -->
+<!--#region Notificacion -->
+
+@Html.Raw(TempData["Notificacion"])
+
+@if (TempData["ShowModalCreate"] != null)
+{
+    <script>
+        swal("Debes Asegurarte de colocar los datos correctos", "ATENCION", "warning");
+
+        window.addEventListener('load', function () {
+            document.getElementById('displayHiddenButtonInsertError').click();
+        });
+
+    </script>
+}
+@if (TempData["ShowModalUpdate"] != null)
+{
+    <script>
+        swal("Debes Asegurarte de colocar los datos correctos", "ATENCION", "warning");
+
+        window.addEventListener('load', function () {
+            document.getElementById('displayHiddenButtonUpdateError').click();
+            document.getElementById("closeButtonModalUpdate").disabled = true;
+        });
+
+    </script>
+}
+<!--#endregion -->
+
+
+<br />
+<br />
+
+<div class="panel panel-primary">
+    <div class="panel-heading" id="pruebaSS"><center>FILTRAR CARGO</center></div>
+    <div class="panel-body">
+        <div class="modal-body" align="center">
+            @using (Html.BeginForm("ResultadoBusquedaCarg", "Cargo", FormMethod.Get, new { @class = "form-inline" }))
+            {
+                <div class="input-group">
+                    <span class="input-group-addon" id="sizing-addon2">
+                        <i class="fa fa-cogs" aria-hidden="true"></i>
+                    </span>
+                    @Html.DropDownList("nombreCrg", new SelectList(ViewData["CargosNombres"] as List<string>), "CARGOS",
+                   new { @class = "form-control" })
+                </div>
+
+                <button type="submit" class="btn btn-warning">
+                    FILTRAR
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+
+                <img src="https://i.pinimg.com/originals/ad/1b/90/ad1b90b66875bbf49309513601c6f74b.png" width="40" height="40" />
+                <img src="https://i.pinimg.com/originals/ad/1b/90/ad1b90b66875bbf49309513601c6f74b.png" width="40" height="40" />
+                <img src="https://i.pinimg.com/originals/ad/1b/90/ad1b90b66875bbf49309513601c6f74b.png" width="40" height="40" />
+            }
+        </div>
+
+    </div>
+</div>
+
+<center><img src="https://image.flaticon.com/icons/png/512/1372/1372887.png" width="90" height="90" /></center>
+<br />
+
+<div class="panel panel-primary">
+    <div class="panel-heading" id="panel4"><center>CARGOS REGISTRADOS</center></div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td><font size="4"><strong><u><mark>Id</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Nombre</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Cantidad encargados</mark></u></strong></font></td>
+
+                    <td>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalCrear" onclick="">
+                            AGREGAR
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var cargo in ViewData["TablaListadoCargos"] as List<CapaEntidad.Vistas_Detalles.Detalle_Cargo>)
+                {
+                    <tr>
+
+                        <td><b>@cargo.id</b></td>
+                        <td><b>@cargo.nombre</b></td>
+                        <td><b><center>@cargo.cantidad_empleados</center></b></td>
+
+                        <td>
+                            <button type="button" class="btn btn-warning" onclick="document.getElementById('txtNombreCargoActualizar').value = '@cargo.nombre',
+                          document.getElementById('idActualizarCargo').value = @cargo.id, ErroresUpdFuera()"
+                                    data-toggle="modal" data-target="#ModalActualizar">
+                                EDITAR
+                                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                            </button>
+
+                            <a href="@Url.Action("ResultadoBusquedaCarg", "Cargo", new {nombreCrg= cargo.nombre })" class="btn btn-primary">
+                                VER EMPLEADOS VINCULADOS
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </a>
+
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalEliminar"
+                                    onclick="document.getElementById('idEliminarCargo').value= @cargo.id">
+                                ELIMINAR
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                            </button>
+
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+
+
+<!-- Modal -->
+<!-- Modal CREAR -->
+<div class="modal fade" id="ModalCrear" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><center>Comienza a crear los cargos de tus empleados</center></div>
+                <div class="panel-body">
+                    <div class="modal-header">
+
+                        <div align="center">
+                            <img src="https://image.flaticon.com/icons/png/512/751/751817.png"
+                                 width="90" height="90" align="middle" />
+                        </div>
+
+                    </div>
+                    <div class="modal-body" align="center">
+                        @using (Html.BeginForm("AgregarCargo", "Cargo", FormMethod.Post, new { @class = "form-inline" }))
+                        {
+                            <div class="input-group">
+                                <span class="input-group-addon" id="sizing-addon2">
+                                    <i class="fa fa-cog" aria-hidden="true"></i>
+                                </span>
+                                @Html.TextBoxFor(n => n.Nombre, null, new { @class = "form-control", placeholder = "CARGO", @id = "txtNombreCrgCrear", autocomplete = "off" })
+
+                            </div>
+                            <button id="btncrear" type="submit" class="btn btn-primary">
+                                AÑADIR
+                                <i class="fa fa-location-arrow" aria-hidden="true"></i>
+                            </button>
+
+                        }
+                        @Html.ValidationMessageFor(n => n.Nombre, null, new { @class = "text-danger", @Id = "errorCr" })
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="btn1" type="button" class="btn btn-danger" onclick="document.getElementById('txtNombreCrgCrear').value = '', ErroresCrFuera()" data-dismiss="modal">CERRAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<!-- Modal ACTUALIZAR -->
+<div class="modal fade" id="ModalActualizar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="panel panel-warning">
+                <div class="panel-heading"><center>Edita tus departamentos</center></div>
+                <div class="panel-body">
+                    <div class="modal-header">
+
+                        <div align="center">
+                            <img src="https://image.flaticon.com/icons/png/512/3080/3080800.png"
+                                 width="90" height="90" align="middle" />
+                        </div>
+                    </div>
+                    <div class="modal-body" align="center">
+                        @using (Html.BeginForm("ActualizarCargo", "Cargo", FormMethod.Post, new { @class = "form-inline" }))
+                        {
+                            <div class="input-group">
+                                <span class="input-group-addon" id="sizing-addon2">
+                                    <i class="fa fa-building" aria-hidden="true"></i>
+                                </span>
+                                @Html.TextBoxFor(n => n.Nombre, null, new { @class = "form-control", placeholder = "CARGO", @id = "txtNombreCargoActualizar", autocomplete = "off" })
+                            </div>
+                            <button id="btncrear" type="submit" class="btn btn-primary">
+                                GUARDAR CAMBIOS
+                                <i class="fa fa-bookmark" aria-hidden="true"></i>
+                            </button>
+
+                            @Html.HiddenFor(n => n.Id, new { @Id = "idActualizarCargo" })
+                        }
+                        @Html.ValidationMessageFor(n => n.Nombre, null, new { @class = "text-danger", @Id = "errorUpd" })
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="btn1" type="button" class="btn btn-danger" onclick="ErroresUpdFuera(), ErroresCrFuera()" data-dismiss="modal">CANCELAR ACTUALIZACION</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- Modal ELIMINAR -->
+<div class="modal fade" id="ModalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <div class="panel panel-warning">
+                <div class="panel-heading"><strong>¿Seguro que quiere eliminar este cargo?</strong></div>
+                <div class="panel-body">
+
+                    @using (Html.BeginForm("EliminarCargo", "Cargo", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(n => n.Id, new { @id = "idEliminarCargo" });
+                        <button type="submit" class="btn btn-danger">ELIMINAR</button>
+                    }
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--#region BOTONES ESCONDIDOS -->
+<button id="displayHiddenButtonInsertError" style="display: none;" type="button" data-toggle="modal" data-target="#ModalCrear">
+</button>
+
+<button id="displayHiddenButtonUpdateError" style="display: none;" type="button" data-toggle="modal" data-target="#ModalActualizar">
+</button>
+<!--#endregion -->

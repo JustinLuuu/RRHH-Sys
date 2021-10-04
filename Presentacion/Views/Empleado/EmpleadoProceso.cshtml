@@ -1,0 +1,565 @@
+﻿@model CapaEntidad.Empleados
+@using Presentacion.Enumerados;
+@using System.Linq; 
+
+<!--#region retrieve -->
+<script src="~/JScript_mis_vistas/Empleados/LimpiarFormularioCrear.js"></script>
+<script src="~/JScript_mis_vistas/Empleados/EliminarMensajesErrorUpdate.js"></script>
+<script src="~/JScript_mis_vistas/Empleados/EliminarErroresCrear.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+<link rel="stylesheet" href="~/Estilos_mis_vistas/EstiloEmpleadoVista/EmpleadoProceso.css" />
+<link rel="stylesheet" href="~/Estilos_mis_vistas/EstiloEmpleadoVista/EstiloFuerte.css" />
+<!--#endregion -->
+<!--#region Notificacion -->
+
+@Html.Raw(TempData["Notificacion"])
+
+@if (TempData["ShowModalCreate"] != null)
+{
+    <script>
+        swal("Debes Asegurarte de colocar los datos correctos", "ATENCION", "warning");
+
+        window.addEventListener('load', function () {
+            document.getElementById('displayHiddenButtonInsertError').click();
+        });
+
+    </script>
+}
+@if (TempData["ShowModalUpdate"] != null)
+{
+    <script>
+        swal("Debes Asegurarte de colocar los datos correctos", "ATENCION", "warning");
+
+        window.addEventListener('load', function () {
+            document.getElementById('displayHiddenButtonUpdateError').click();
+            document.getElementById("closeButtonModalUpdate").disabled = true;
+        });
+
+    </script>
+}
+
+<script>
+
+    function enviar() {
+
+        if (document.getElementById('rdbF').checked || document.getElementById('rdbM').checked) {
+
+            return true;
+        }
+        else {
+            swal("Debe elegir el sexo del empleado !", "Atencion", "warning");
+            return false;
+        }
+
+    }
+
+</script>
+<!--#endregion -->
+
+
+@{
+    ViewBag.Title = "Empleados :)";
+}
+
+<br />
+<br />
+
+<div class="panel panel-primary">
+    <div class="panel-heading" id="panel1"><center>FILTRAR EMPLEADOS</center></div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("ResultadoBusquedaEmp", "Empleado", FormMethod.Get, new { @class = "form-inline" }))
+        {
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="sizing-addon2">
+                            <i class="fa fa-building" aria-hidden="true"></i>
+                        </span>
+                        @Html.DropDownList("generico", ViewData["DropDownListDepartamentosFind"] as List<SelectListItem>, "FILTRAR X DEPARTAMENTO",
+                        new { @class = "form-control" })
+                    </div>
+                    <button type="submit" class="btn btn-warning">
+                        FILTRAR
+                        <i class="fa fa-search-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        }
+
+        @using (Html.BeginForm("ResultadoBusquedaEmp", "Empleado", FormMethod.Get, new { @class = "form-inline" }))
+        {
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="sizing-addon2">
+                            <i class="fa fa-street-view" aria-hidden="true"></i>
+                        </span>
+                        @Html.DropDownList("generico", new SelectList(Enum.GetValues(typeof(Estatus))), "FILTRAR X ESTATUS", new { @class = "form-control", @Id = "dropEstatusUpdate" })
+                    </div>
+                    <button type="submit" class="btn btn-warning">
+                        FILTRAR
+                        <i class="fa fa-search-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+
+<center><img src="https://image.flaticon.com/icons/png/512/1713/1713272.png" width="90" height="90" /></center>
+<br />
+
+<div class="panel panel-primary">
+    <div class="panel-heading" id="panel2"><center>EMPLEADOS REGISTRADOS</center></div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td><font size="4"><strong><u><mark>Codigo</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Nombre</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Apellido</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Departamento</mark></u></strong></font></td>
+                    <td><font size="4"><center><strong><u><mark>Cargo</mark></u></strong></center></font></td>
+                    <td><font size="4"><strong><u><mark>Estatus</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Retrato</mark></u></strong></font></td>
+
+                    <td>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalInsert" onclick="ErroresFuera()">
+                            AGREGAR
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalSearch">
+                            BUSCAR
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </td>
+
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var empleado in ViewData["ListadoEmpleados"] as List<CapaEntidad.Vistas.Detalle_Empleado>)
+                {
+                    var colorfila = (empleado.estatus != "INACTIVO") ? "none" : "danger";
+
+                    <tr class="@colorfila">
+
+                        <td><b><center>@empleado.codigo</center></b></td>
+                        <td><b><center>@empleado.nombre</center></b></td>
+                        <td><b><center>@empleado.apellido</center></b></td>
+                        <td><b><center>@empleado.departamento_n</center></b></td>
+                        <td><b><center>@empleado.cargo_n</center></b></td>
+                        <td><b><center>@empleado.estatus</center></b></td>
+                        <td><center><img src="@empleado.retrato" width="50" height="50" ;" /></center> </td>
+
+                        <td>
+                            <button type="button" class="btn btn-warning" onclick="document.getElementById('EmpleadoUpdateId').value = @empleado.id,
+                               document.getElementById('nameUpdate').value = '@empleado.nombre', document.getElementById('cmbDpt').value = @empleado.departamento_id,
+                               document.getElementById('lastnameUpdate').value = '@empleado.apellido', document.getElementById('cmbCargos').value = @empleado.cargo_id,
+                               document.getElementById('telUpdate').value = '@empleado.telefono', document.getElementById('moneyUpdate').value = @empleado.salario,
+                               document.getElementById('EmpleadoEstatusUpdate').value = '@empleado.estatus',
+                               DesaparecerMensajesErrorUpdate()"
+                                    data-toggle="modal" data-target="#ModalUpdate">
+                                EDITAR
+                                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalDetails"
+                                    onclick="document.getElementById('imgDetalle').src = '@empleado.retrato',
+                            document.getElementById('tltNombre').innerHTML = '@empleado.nombre ' + '@empleado.apellido',
+                            document.getElementById('tltContacto').innerHTML = '@empleado.telefono',
+                            document.getElementById('tltFechaIngr').innerHTML = '@empleado.fecha_ingreso.ToString("dd/MM/yyyy")',
+                            document.getElementById('tltSueldo').innerHTML= '@empleado.salario' + ' $'">
+                                DETALLES
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalEliminar"
+                                    onclick="document.getElementById('eliminarEmp').value= @empleado.id">
+                                ELIMINAR
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                            </button>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+<!-- Modal CREAR-->
+<div class="modal fade" id="ModalInsert" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-header">
+                    <img src="https://image.flaticon.com/icons/png/512/774/774428.png" width="100" height="100" />
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Comienza a añadir tus empleados</div>
+                    <div class="panel-body">
+
+                        @using (Html.BeginForm("AgregarEmpleado", "Empleado", FormMethod.Post, new { onsubmit = "return enviar()" }))
+                        {
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Nombre")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-address-card" aria-hidden="true"></i>
+                                        </span>
+                                         @Html.TextBoxFor(n => n.Nombre, null, new { @class = "form-control", placeholder = "NOMBRE", @id = "txtNombreInsert" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Nombre,"" ,new { @class = "text-danger", @Id = "error1" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Departamento")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-building" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.DropDownListFor(n => n.Departamento_Id, ViewData["DropDownListDepartamentosInsert"] as List<SelectListItem>, "DEPARTAMENTOS",
+                                       new { @class = "form-control", @Id = "dropDepartamentos" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Departamento_Id, null, new { @class = "text-danger", @Id = "error2" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Apellido")
+
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-address-card" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.TextBoxFor(n => n.Apellido, null, new { @class = "form-control", placeholder = "APELLIDO", @Id = "txtApellidoInsert" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Apellido, null, new { @class = "text-danger", @Id = "error3" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <div>
+                                        @Html.Label("Cargo")
+                                        <div class="input-group">
+                                            <span class="input-group-addon" id="sizing-addon2">
+                                                <i class="fa fa-cog" aria-hidden="true"></i>
+                                            </span>
+                                            @Html.DropDownListFor(n => n.Cargo_Id, ViewData["dropdownListCargos"] as List<SelectListItem>, "CARGOS", new { @class = "form-control", @Id = "dropCargos" })
+                                        </div>
+                                        @Html.ValidationMessageFor(n => n.Cargo_Id, null, new { @class = "text-danger", @Id = "error4" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Contacto")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-mobile" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.TextBoxFor(n => n.Telefono, null, new { @class = "form-control", autocomplete = "off", placeholder = "TELEFONO", @Id = "txtTelefonoInsert" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Telefono, null, new { @class = "text-danger", @Id = "error5" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <div>
+                                        @Html.Label("Digite el salario del empleado")
+                                        <div class="input-group">
+                                            <span class="input-group-addon" id="sizing-addon2">
+                                                <i class="fa fa-percent" aria-hidden="true"></i>
+                                            </span>
+                                            @Html.TextBoxFor(n => n.Salario, null, new { @class = "form-control", autocomplete = "off", placeholder = "SALARIO", @Id = "txtSalarioInsert" })
+                                        </div>
+                                        @Html.ValidationMessageFor(n => n.Salario, null, new { @class = "text-danger", @Id = "error6" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Sexo")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-female" aria-hidden="true"></i>
+                                            <i class="fa fa-male" aria-hidden="true"></i>
+                                        </span>
+                                        <label>@Html.RadioButtonFor(n => n.Sexo, "femenino", new { @Id = "rdbF" })  Mujer</label>
+                                        <label>@Html.RadioButtonFor(n => n.Sexo, "masculino", new { @Id = "rdbM" }) Hombre</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @Html.HiddenFor(n => n.Estatus, new { @Id = "", @Value = "ACTIVO" })
+
+                            <div>
+                                <button id="btncrear" type="submit" class="btn btn-primary">
+                                    AÑADIR
+                                    <i class="fa fa-location-arrow" aria-hidden="true"></i>
+                                </button>
+                                <button id="btnClearAll" type="reset" class="btn btn-warning">
+                                    LIMPIAR CAMPOS
+                                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger"
+                        data-dismiss="modal" onclick="document.getElementById('txtNombreInsert').value = '', document.getElementById('txtApellidoInsert').value = '',
+                    document.getElementById('txtTelefonoInsert').value = '', document.getElementById('rdbF').checked = false, document.getElementById('rdbM').checked = false,
+                    document.getElementById('txtSalarioInsert').value = '', document.getElementById('dropDepartamentos').selectedIndex = 0, document.getElementById('dropCargos').selectedIndex =0">
+                    CERRAR
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+<!-- Modal ACTUALIZAR -->
+<div class="modal fade" id="ModalUpdate" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="modal-header">
+                    <img src="https://image.flaticon.com/icons/svg/2808/2808392.svg" width="100" height="100" />
+                </div>
+                <div class="panel panel-warning">
+                    <div class="panel-heading">Edita tus empleados</div>
+                    <div class="panel-body">
+
+                        @using (Html.BeginForm("ActualizarEmpleado", "Empleado", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(n => n.Id, new { @Id = "EmpleadoUpdateId" })
+                            @Html.HiddenFor(n => n.Estatus, new { @Id = "EmpleadoEstatusUpdate" })
+                            @Html.HiddenFor(n => n.Sexo, new { @Id = "sexoEmpleado", @Value = "ninguno" })
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Nombre actual")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-address-card" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.TextBoxFor(n => n.Nombre, null, new { @class = "form-control", placeholder = "NOMBRE", @id = "nameUpdate" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Nombre, null, new { @class = "text-danger", @Id = "errorNombreUpdate" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Departamento actual")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-building" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.DropDownListFor(n => n.Departamento_Id, ViewData["DropDownListDepartamentosInsert"] as List<SelectListItem>, "DEPARTAMENTOS",
+                                       new { @class = "form-control", @Id = "cmbDpt" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Departamento_Id, null, new { @class = "text-danger", @Id = "errorDeptUpdate" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Apellido actual")
+
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-address-card" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.TextBoxFor(n => n.Apellido, null, new { @class = "form-control", placeholder = "APELLIDO", @Id = "lastnameUpdate" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Apellido, null, new { @class = "text-danger", @Id = "errorApellidoUpdate" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Cargo actual")
+
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-cog" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.DropDownListFor(n => n.Cargo_Id, ViewData["dropdownListCargos"] as List<SelectListItem>, "CARGOS", new { @class = "form-control", @Id = "cmbCargos" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Cargo_Id, null, new { @class = "text-danger", @Id = "errorCargoUpdate" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Contacto actual")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-mobile" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.TextBoxFor(n => n.Telefono, null, new { @class = "form-control", autocomplete = "off", placeholder = "TELEFONO", @Id = "telUpdate" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Telefono, null, new { @class = "text-danger", @Id = "errorNumeroUpdate" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Salario actual")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-percent" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.TextBoxFor(n => n.Salario, null, new { @class = "form-control", autocomplete = "off", placeholder = "SALARIO", @Id = "moneyUpdate" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Salario, null, new { @class = "text-danger", @Id = "errorSalarioUpdate" })
+                                </div>
+                            </div>
+
+
+                            <div>
+                                <button type="submit" class="btn btn-primary" style="float: unset;">
+                                    GUARDAR CAMBIOS
+                                    <i class="fa fa-bookmark" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCancelarActualizado" type="button" class="btn btn-danger"
+                        data-dismiss="modal" onclick="document.getElementById('txtNombreInsert').value = '',
+                                document.getElementById('txtApellidoInsert').value = '', document.getElementById('txtSalarioInsert').value = '',
+                                document.getElementById('txtTelefonoInsert').value = '', document.getElementById('dropCargos').value = '',
+                                document.getElementById('dropDepartamentos').value = '', DesaparecerMensajesErrorUpdate()">
+                    CANCELAR ACTUALIZACION
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- Modal ELIMINAR -->
+<div class="modal fade" id="ModalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <div class="panel panel-warning">
+                <div class="panel-heading"><strong>¿Seguro que quiere eliminar este empleado?</strong></div>
+                <div class="panel-body">
+
+                    @using (Html.BeginForm("EliminarEmpleado", "Empleado", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(n => n.Id, new { @id = "eliminarEmp" });
+                        <button type="submit" class="btn btn-danger">ELIMINAR</button>
+                    }
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- Modal DETALLES -->
+<div class="modal fade" id="ModalDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><center><h4 id="tltNombre"></h4></center></div>
+                <div class="panel-body">
+                    <div class="modal-header">
+                        <div align="center">
+                            <img src="nothing" id="imgDetalle"
+                                 width="90" height="90" align="middle" />  <br /> <br />
+                            <h4><u><b>Numero telefónico</b></u></h4>
+                            <h5 id="tltContacto">telefono</h5>
+                            <h4><u><b>Fecha de ingreso</b></u></h4>
+                            <h5 id="tltFechaIngr">date</h5>
+                            <h4><u><b>Sueldo neto</b></u></h4>
+                            <h5 id="tltSueldo">$</h5>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn1" type="button" class="btn btn-danger" data-dismiss="modal">CERRAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- Modal BUSCAR -->
+<div class="modal fade" id="ModalSearch" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Filtro clandestino</div>
+                <div class="panel-body">
+                    <div class="modal-header">
+
+                        <div align="center">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCtAw0bjmA6b_Fe6B4YjbTcg67j775tEj3lQ&usqp=CAU"
+                                 width="60" height="60" align="middle" /><h1><u>Búsqueda genérica</u></h1>
+                        </div>
+
+                    </div>
+                    <div class="modal-body" align="center">
+                        @using (Html.BeginForm("ResultadoBusquedaEmp", "Empleado", FormMethod.Get, new { @class = "form-inline" }))
+                        {
+                            @Html.TextBox("generico", null, new { @class = "form-control", @placeholder = "BUSCA UN EMPLEADO", @type = "text" })
+
+                            <button type="submit" class="btn btn-primary">FILTRAR</button>
+                            <img src="https://i.pinimg.com/originals/ad/1b/90/ad1b90b66875bbf49309513601c6f74b.png" width="40" height="40" />
+                            <img src="https://i.pinimg.com/originals/ad/1b/90/ad1b90b66875bbf49309513601c6f74b.png" width="40" height="40" />
+                            <img src="https://i.pinimg.com/originals/ad/1b/90/ad1b90b66875bbf49309513601c6f74b.png" width="40" height="40" />
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn1" type="button" class="btn btn-danger" onclick="Limpiar1()" data-dismiss="modal">CERRAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--#region BOTONES ESCONDIDOS -->
+<button id="displayHiddenButtonInsertError" style="display: none;" type="button" data-toggle="modal" data-target="#ModalInsert">
+</button>
+
+<button id="displayHiddenButtonUpdateError" style="display: none;" type="button" data-toggle="modal" data-target="#ModalUpdate">
+</button>
+<!--#endregion -->

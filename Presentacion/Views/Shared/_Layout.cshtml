@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El comienzo</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            MANTENIMIENTO <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a href="#">@Html.ActionLink("Mantenimiento Empleados ✓", "EmpleadoProceso", "Empleado")</a></li>
+                            <li><a href="#">@Html.ActionLink("Mantenimiento Departamentos ✓", "DepartamentoProceso", "Departamento")</a></li>
+                            <li><a href="#">@Html.ActionLink("Mantenimiento Cargos ✓", "CargoProceso", "Cargo")</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            PROCESOS <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a href="#">@Html.ActionLink("Calcular Nómina ✓", "NominaProceso", "Nomina")</a></li>
+                            <li><a href="#">@Html.ActionLink("Gestionar Salida ✓", "SalidasProceso", "Salidas")</a></li>
+                            <li><a href="#">@Html.ActionLink("Gestionar Vacaciones ✓", "VacacionesProceso", "Vacaciones")</a></li>
+                            <li><a href="#">@Html.ActionLink("Gestionar Permisos ✓", "PermisosProceso", "Permisos")</a></li>
+                            <li><a href="#">@Html.ActionLink("Gestionar Licencias ✓", "LicenciaProceso", "Licencia")</a></li>
+
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            INFORMES <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a href="#">@Html.ActionLink("Nomina", "EmpleadoProceso", "Empleado")</a></li>
+                            <li><a href="#">@Html.ActionLink("Empleados Activos ✓", "DepartamentoProceso", "Departamento")</a></li>
+                            <li><a href="#">@Html.ActionLink("Empleados Inactivos ✓", "CargoProceso", "Cargo")</a></li>
+                            <li><a href="#">@Html.ActionLink("Departamentos ✓", "CargoProceso", "Cargo")</a></li>
+                            <li><a href="#">@Html.ActionLink("Cargos ✓", "CargoProceso", "Cargo")</a></li>
+                            <li><a href="#">@Html.ActionLink("Entradas Empleados x Mes ✓", "CargoProceso", "Cargo")</a></li>
+                            <li><a href="#">@Html.ActionLink("Salida Empleados x Mes ✓", "CargoProceso", "Cargo")</a></li>
+                            <li><a href="#">@Html.ActionLink("Permisos Empleados ✓", "CargoProceso", "Cargo")</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()   
+        <hr />
+        <footer>
+            @*nothing*@
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

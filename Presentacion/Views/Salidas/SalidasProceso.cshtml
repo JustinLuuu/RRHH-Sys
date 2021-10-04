@@ -1,0 +1,244 @@
+﻿@model CapaEntidad.Salidas
+@using CapaEntidad.Vistas_Detalles;
+
+<!--#region retrieve -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet" href="~/Estilos_mis_vistas/EstiloSalidas/EstiloFuerte.css" />
+<link rel="stylesheet" href="~/Estilos_mis_vistas/EstiloEmpleadoVista/EmpleadoProceso.css" />
+<!--#endregion -->
+
+<!--#region notificaciones -->
+@Html.Raw(TempData["Notificacion"])
+
+@if (TempData["ShowModalCreate"] != null)
+{
+    <script>
+        swal("Debes Asegurarte de colocar los datos correctos", "ATENCION", "warning");
+
+        window.addEventListener('load', function () {
+            document.getElementById('displayHiddenButtonInsertError').click();
+        });
+
+    </script>
+}
+<!--#endregion -->
+
+
+<br />
+<br />
+<br />
+
+<center><img src="https://image.flaticon.com/icons/png/512/2194/2194309.png" width="110" height="110" /> </center>
+<br />
+<button type="button" class="btn btn-warning"
+        data-toggle="modal" data-target="#Tabla">
+    INACTIVAR UN EMPLEADO
+    <i class="fa fa-window-close-o" aria-hidden="true"></i>
+</button>
+
+<br />
+<br />
+
+<div class="panel">
+    <div class="panel-heading" id="panelSalida"><center>EMPLEADOS INACTIVOS</center></div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td><font size="4"><strong><u><mark>Codigo</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Nombre</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Apellido</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Retrato</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Tipo</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Estatus</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Motivo</mark></u></strong></font></td>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var empleado in ViewData["TablaEmpleadosInactivos"] as List<Detalle_Salida>)
+                {
+                    <tr class="danger">
+
+                        <td><b>@empleado.codigo</b></td>
+                        <td><b>@empleado.nombre</b></td>
+                        <td><b>@empleado.apellido</b></td>
+                        <td><img src="@empleado.retrato" width="50" height="50" ;" /></td>
+                        <td><b>@empleado.tipo</b></td>
+                        <td><b>@empleado.estatus</b></td>
+
+                        <td>
+                            <button type="button" class="btn btn-primary"
+                                    data-toggle="modal" data-target="#ModalPepe">
+                                MOTIVO
+                                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                            </button>
+                        </td>
+
+
+                        <td>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#pepino"
+                                    onclick="document.getElementById('idEmpleado').value= @empleado.id">
+                                ACTIVAR
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                            </button>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Button trigger modal -->
+<!-- Modal Salida-->
+<div class="modal fade" id="Tabla" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-header">
+                    <center><img src="https://www.flaticon.com/svg/static/icons/svg/2037/2037451.svg" width="100" height="100" /> </center>
+                </div>
+                <div class="panel-heading" id="panelActivos"><center>Inactiva un empleado ahora </center></div>
+                <div class="panel-body">
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <td><font size="4"><strong><u><mark>Codigo</mark></u></strong></font></td>
+                                <td><font size="4"><strong><u><mark>Nombre</mark></u></strong></font></td>
+                                <td><font size="4"><strong><u><mark>Apellido</mark></u></strong></font></td>
+                                <td><font size="4"><strong><u><mark>Telefono</mark></u></strong></font></td>
+                                <td><font size="4"><strong><u><mark>Retrato</mark></u></strong></font></td>
+                                <td><font size="4"><strong><u><mark>Estatus</mark></u></strong></font></td>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var empleado in ViewData["TablaEmpleadosActivos"] as List<Detalle_Salida>)
+                            {
+                                <tr class="success">
+
+                                    <td><b><center>@empleado.codigo</center></b></td>
+                                    <td><b><center>@empleado.nombre</center></b></td>
+                                    <td><b><center>@empleado.apellido</center></b></td>
+                                    <td><b><center>@empleado.telefono</center></b></td>
+                                    <td><center><img src="@empleado.retrato" width="50" height="50" ;" /></center> </td>
+                                    <td><b><center>@empleado.estatus</center></b></td>
+
+                                    <td>
+                                        <button type="button" class="btn btn-danger"
+                                                data-toggle="modal" data-target="#ModalInactivar" onclick="document.getElementById('idEmpInactivar').value=@empleado.id">
+                                            DESACTIVAR
+                                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger"
+                        data-dismiss="modal">
+                    CERRAR
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+<!-- Modal ACTIVAR-->
+<div class="modal fade" id="pepino" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="panel-heading" id="panelActivos">¿Seguro que quiere volver a activar este empleado?</div>
+                <div class="panel-body">
+
+                    @using (Html.BeginForm("ActivarEmpleado", "Salidas", FormMethod.Post))
+                    {
+                        @Html.Hidden("idEmpleado"); // debe ser el mismo nombre del parametro
+                        <button type="submit" class="btn btn-success">ACTIVAR</button>
+                        <button type="button" class="btn btn-danger"
+                                data-dismiss="modal">
+                            CANCELAR
+                        </button>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+<!-- Modal INACTIVAR-->
+<div class="modal fade" id="ModalInactivar" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-header">
+                    <center><img src="https://pngimage.net/wp-content/uploads/2018/06/no-image-icon-png-4.png" width="100" height="100" /></center>
+                </div>
+                <div class="panel">
+                    <div class="panel-heading" id="panelFormInactivar">Llena los siguientes campos</div>
+                    <div class="panel-body">
+
+                        @using (Html.BeginForm("AgregarSalida", "Salidas", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(x => x.Id_Empleado, new { @Id = "idEmpInactivar" })
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Elija el tipo de Salida")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-bars" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.DropDownListFor(x => x.Tipo, new SelectList(new List<string> { "RENUNCIA", "DESAHUCIO", "DESPIDO  " }), "TIPO DE SALIDA", new { @class = "form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Tipo, null, new { @class = "text-danger", @Id = "errorNombreUpdate" })
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Escriba un motivo")
+                                    <div class="input-group">                                    
+                                        @Html.TextAreaFor(x=> x.Motivo, new { @Style = "height:55px; width:300px;" })
+                                    </div>
+                                    @Html.ValidationMessageFor(n => n.Motivo, null, new { @class = "text-danger", @Id = "errorNombreUpdate" })
+                                </div>
+                            </div>
+
+                            <div>
+                                <button type="submit" class="btn btn-warning" style="float: unset;">
+                                    CONFIRMAR
+                                    <i class="fa fa-power-off" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger"
+                            data-dismiss="modal" onclick="">
+                        CANCELAR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+

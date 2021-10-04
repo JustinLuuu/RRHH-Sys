@@ -1,0 +1,235 @@
+﻿@model CapaEntidad.Permisos
+
+
+<link rel="stylesheet" href="~/Estilos_mis_vistas/EstiloSalidas/EstiloFuerte.css" />
+<link rel="stylesheet" href="~/Estilos_mis_vistas/EstiloEmpleadoVista/EmpleadoProceso.css" />
+
+
+@{
+    ViewBag.Title = "SalidasProceso";
+}
+
+
+<br />
+<br />
+<br />
+
+@if (TempData["SalidaExito"] != null)
+{
+    if ((bool)TempData["SalidaExito"] == true)
+    {
+        <script>
+            swal("Empleado Inactivado Con Exito !", "Afortunadamente", "success");
+        </script>
+    }
+
+}
+@if (ViewBag.ModalInsertError == true)
+{
+    <script>
+        swal("Debes Asegurarte de colocar los datos correctos", "ATENCION", "warning");
+
+        window.addEventListener('load', function () {
+            document.getElementById('displayHiddenButtonInsertError').click();
+        });
+
+    </script>
+}
+
+
+<center><img src="https://www.flaticon.es/svg/static/icons/svg/3063/3063794.svg" width="110" height="110" /> </center>
+<br />
+<button type="button" class="btn btn-warning"
+        data-toggle="modal" data-target="#Tabla">
+    DAR PERMISOS A EMPLEADO
+    <i class="fa fa-list-alt" aria-hidden="true"></i>
+</button>
+
+<br />
+<br />
+
+<div class="panel">
+    <div class="panel-heading" id="panelSalida"><center>EMPLEADOS CON PERMISOS</center></div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td><font size="4"><strong><u><mark>Codigo</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Nombre</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Apellido</mark></u></strong></font></td>
+                    <td><font size="4"><strong><u><mark>Retrato</mark></u></strong></font></td>
+                    <td><font size="4"><center><strong><u><mark>Desde</mark></u></strong></center></font></td>
+                    <td><font size="4"><center><strong><u><mark>Hasta</mark></u></strong></center></font></td>
+                    <td><font size="4"><center><strong><u><mark>Comentarios</mark></u></strong></center></font></td>
+
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var empleado in ViewData["ListadoTablaEmpleadosPermiso"] as List<CapaEntidad.Vistas_Detalles.Detalle_Permisos>)
+                {
+                    <tr class="success">
+
+                        <td><b>@empleado.codigo</b></td>
+                        <td><b>@empleado.nombre</b></td>
+                        <td><b>@empleado.apellido</b></td>
+                        <td><img src="@empleado.retrato" width="50" height="50" ;" /></td>
+                        <td><b><center>@empleado.desde.ToString("dd/MM/yyyy")</center></b></td>
+                        <td><b><center>@empleado.hasta.ToString("dd/MM/yyyy")</center></b></td>
+
+                        <td>
+                            <center>
+                                <button type="button" class="btn btn-primary"
+                                        data-toggle="modal" data-target="#ModalUpdate">
+                                    COMENTARIO
+                                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                </button>
+                            </center>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Button trigger modal -->
+<!-- Modal Tabla-->
+<div class="modal fade" id="Tabla" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-header">
+                    <img src="https://www.flaticon.com/svg/static/icons/svg/2037/2037451.svg" width="100" height="100" />
+                </div>
+                <div class="panel-heading" id="panelActivos">Dale permisos a un empleado</div>
+                <div class="panel-body">
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <td><font size="4"><strong><u><mark>Codigo</mark></u></strong></font></td>
+                                <td><font size="4"><strong><u><mark>Nombre</mark></u></strong></font></td>
+                                <td><font size="4"><strong><u><mark>Apellido</mark></u></strong></font></td>
+                                <td><font size="4"><strong><u><mark>Telefono</mark></u></strong></font></td>
+                                <td><font size="4"><strong><u><mark>Retrato</mark></u></strong></font></td>
+                                <td><font size="4"><strong><u><mark>Estatus</mark></u></strong></font></td>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var empleado in ViewData["ListadoTablaEmpleados"] as List<CapaEntidad.Empleados>)
+                            {
+                                <tr class="success">
+
+                                    <td><b><center>@empleado.Codigo</center></b></td>
+                                    <td><b><center>@empleado.Nombre</center></b></td>
+                                    <td><b><center>@empleado.Apellido</center></b></td>
+                                    <td><b><center>@empleado.Telefono</center></b></td>
+                                    <td><center><img src="@empleado.Retrato" width="50" height="50" ;" /></center> </td>
+                                    <td><b><center>@empleado.Estatus</center></b></td>
+
+                                    <td>
+                                        <button type="button" class="btn btn-warning"
+                                                data-toggle="modal" data-target="#ModalVacaciones" onclick="document.getElementById('idEmpPermisos').value=@empleado.Id">
+                                            DAR PERMISOS
+                                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger"
+                        data-dismiss="modal">
+                    CERRAR
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Button trigger modal -->
+<!-- Modal VACACIONES-->
+<div class="modal fade" id="ModalVacaciones" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-header">
+                    <img src="https://pngimage.net/wp-content/uploads/2018/06/no-image-icon-png-4.png" width="100" height="100" />
+                </div>
+                <div class="panel">
+                    <div class="panel-heading" id="panelFormInactivar">Llena los siguientes campos</div>
+                    <div class="panel-body">
+
+                        @using (Html.BeginForm("PermisosProceso", "Permisos", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(x => x.Id_Empleado, new { @Id = "idEmpPermisos" })
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Desde")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-power-off" aria-hidden="true"></i>
+                                        </span>
+                                        <input type="date" name="Desde" id="Desde" value="" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Hasta")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-bell-slash-o" aria-hidden="true"></i>
+                                        </span>
+                                        <input type="date" name="Hasta" id="Hasta" value="" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Comentarios (OPCIONAL)")
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sizing-addon2">
+                                            <i class="fa fa-bell-slash-o" aria-hidden="true"></i>
+                                        </span>
+                                        @Html.TextBoxFor(n => n.Comentarios, null, new { @class = "form-control", placeholder = "COMENTARIOS", @id = "nameUpdate" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div>
+                                <button type="submit" class="btn btn-warning" style="float: unset;">
+                                    CONFIRMAR
+                                    <i class="fa fa-power-off" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger"
+                            data-dismiss="modal" onclick="">
+                        CANCELAR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
